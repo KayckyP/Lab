@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LabSim Atlas 3D - Explorador Anatômico Humano de Alta Performance. Modelos tridimensionais masculino (BodyParts3D) e feminino (HuBMAP/HRA) com visão explodida espacial, tomografia clínica e raio-x.">
+  <title>LabSim · Atlas Anatômico 3D</title>
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/atlas-viewer.css">
+
+  <!-- Three.js ESM moderno via Import Map local e autônomo -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./js/vendor/three-esm/three.module.js",
+      "three/examples/jsm/controls/OrbitControls.js": "./js/vendor/three-esm/OrbitControls.js",
+      "three/examples/jsm/environments/RoomEnvironment.js": "./js/vendor/three-esm/RoomEnvironment.js",
+      "three/examples/jsm/utils/BufferGeometryUtils.js": "./js/vendor/three-esm/BufferGeometryUtils.js"
+    }
+  }
+  </script>
+</head>
+<body class="atlas-standalone">
+
+  <!-- Topbar Minimalista Integrada -->
+  <header class="atlas-standalone-topbar" aria-label="Barra principal do atlas">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a class="brand-minimal" href="index.html" aria-label="LabSim Atlas 3D">
+        <span class="brand-mark">⌬</span> Lab<span>Sim</span>
+      </a>
+      <span class="badge-tag-edition">ATLAS 3D</span>
+    </div>
+
+    <!-- Seletor de Modelo Anatômico: Masculino / Feminino -->
+    <div class="sex-selector-pill" role="radiogroup" aria-label="Selecione a anatomia de referência">
+      <button class="sex-btn active" data-sex="male" role="radio" aria-checked="true" title="Carregar Anatomia Masculina (BodyParts3D 4.0)">
+        <span>♂</span> Masculino
+      </button>
+      <button class="sex-btn" data-sex="female" role="radio" aria-checked="false" title="Carregar Anatomia Feminina (HuBMAP / HRA v1.5)">
+        <span>♀</span> Feminino
+      </button>
+    </div>
+
+    <!-- Ações à Direita: Busca Instantânea e Modal Sobre -->
+    <div class="topbar-right-actions">
+      <div class="search-wrap" style="position: relative;">
+        <input type="text" id="search-anatomy" class="search-input" placeholder="Buscar estrutura ou órgão... (pressione /)" aria-label="Buscar estrutura anatômica">
+        <div class="search-results" id="search-results"></div>
+      </div>
+      <button type="button" class="btn-link-action" id="btn-about" style="color: var(--teal-glow); font-size: 0.82rem; font-weight: 600; padding: 6px 12px; background: rgba(255,255,255,0.06); border-radius: 6px; border: 1px solid var(--line-dark);">
+        ℹ️ Sobre
+      </button>
+    </div>
+  </header>
+
+  <!-- WORKSPACE 3D DO ATLAS (TELA CHEIA) -->
+  <main class="atlas-workspace-modern" id="atlas-workspace" aria-label="Visualizador Anatômico 3D">
+    
+    <!-- Canvas Three.js de Alta Resolução -->
+    <div id="atlas-viewport"></div>
+
+    <!-- Indicador de Escala Antropométrica Real -->
+    <div class="atlas-scale-ruler" title="Altura do modelo anatômico de referência: ~1,70 m">
+      <span class="ruler-tick"></span>
+      <span class="ruler-text">Escala Real · Altura ~1,70 m</span>
+    </div>
+
+    <!-- Barra Superior Flutuante de Ferramentas Avançadas -->
+    <div class="atlas-floating-tools" aria-label="Ferramentas avançadas">
+      <button class="tool-action-btn" id="btn-xray" title="Alternar modo Raio-X holográfico [Tecla X]">
+        <span>🦴</span> Raio-X
+      </button>
+      <button class="tool-action-btn" id="btn-clip-toggle" title="Corte Tomográfico (Axial, Coronal, Sagital)">
+        <span>✂️</span> Tomografia
+      </button>
+      <button class="tool-action-btn" id="btn-snapshot" title="Salvar imagem fotográfica médica em PNG [Tecla S]">
+        <span>📷</span> Salvar PNG
+      </button>
+      <button class="tool-action-btn" id="btn-fullscreen" title="Expandir visualizador em Tela Cheia [Tecla F]">
+        <span>⛶</span> Tela Cheia
+      </button>
+    </div>
+
+    <!-- Painel Flutuante de Ajuste do Corte Tomográfico -->
+    <div class="clip-controls-box" id="clip-controls-box" style="display: none;">
+      <div class="clip-header">
+        <span class="clip-label">CORTE TOMOGRÁFICO INTERATIVO</span>
+      </div>
+      <div class="clip-row">
+        <select id="clip-plane-select" class="clip-select" aria-label="Tipo de corte tomográfico">
+          <option value="axial">Axial (Transversal - Altura)</option>
+          <option value="sagittal">Sagital (Longitudinal Lateral)</option>
+          <option value="coronal">Coronal (Frente / Costas)</option>
+        </select>
+        <input type="range" id="clip-slider" min="0" max="1.85" step="0.01" value="0.9" class="clip-slider" title="Deslizar plano de corte">
+      </div>
+    </div>
+
+    <!-- Legenda Central da Cena -->
+    <div class="atlas-scene-caption">
+      <span class="caption-line"></span>
+      <span id="scene-caption-text">HOMEM ADULTO DE REFERÊNCIA · BODYPARTS3D 4.0</span>
+      <span class="caption-line"></span>
+    </div>
+
+    <!-- Barra Lateral de Sistemas Biológicos -->
+    <aside class="atlas-sidebar-left" aria-label="Sistemas anatômicos">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Sistemas Anatômicos</span>
+        <span class="meta-pill" id="visible-parts-count">Carregando...</span>
+      </div>
+
+      <div class="sidebar-presets">
+        <button class="preset-btn" id="preset-all" title="Mostrar todos os sistemas">Todos</button>
+        <button class="preset-btn" id="preset-skeleton" title="Mostrar apenas o esqueleto">Esqueleto</button>
+        <button class="preset-btn" id="preset-organs" title="Mostrar órgãos vitais">Órgãos</button>
+      </div>
+
+      <div class="system-list-scroll" id="system-checkboxes">
+        <!-- Preenchido dinamicamente pelo atlas-app.js -->
+      </div>
+
+      <div class="sidebar-footer">
+        <span>Estruturas indexadas</span>
+        <button class="btn-link-action" id="btn-hide-all">Ocultar todos</button>
+      </div>
+    </aside>
+
+    <!-- Controles de Câmera e Orientação Flutuantes -->
+    <nav class="atlas-view-controls" aria-label="Controles de Câmera">
+      <button class="view-btn active" data-view="three-quarter" title="Vista em Três Quartos [1]">¾</button>
+      <button class="view-btn" data-view="front" title="Vista Anterior / Frente [2]">F</button>
+      <button class="view-btn" data-view="side" title="Vista Lateral / Perfil [3]">L</button>
+      <button class="view-btn" data-view="back" title="Vista Posterior / Costas [4]">C</button>
+      <button class="view-btn" id="btn-rotate" title="Alternar rotação contínua [R]">🔄 Girar</button>
+    </nav>
+
+    <!-- Dock Inferior: Controle de Vista Explodida -->
+    <div class="atlas-bottom-dock" aria-label="Controle de visualização explodida">
+      <div class="dock-slider-wrap">
+        <div class="slider-label-row">
+          <label for="explode-slider">Explodir Anatomia em Inventário Espacial</label>
+          <span id="explode-val">0%</span>
+        </div>
+        <input type="range" id="explode-slider" class="dock-slider" min="0" max="100" value="0" step="1" aria-label="Grau de explosão">
+        <div class="slider-endpoints">
+          <span>Corpo Montado (0%)</span>
+          <span>Inventário Planar Completo (100%)</span>
+        </div>
+      </div>
+      <button class="btn-reset-dock" id="btn-reset" title="Restaurar corpo montado e câmera original [Tecla A]">
+        ↺ Reconstituir
+      </button>
+    </div>
+
+    <!-- Gaveta Lateral Direita: Detalhes da Estrutura Selecionada -->
+    <aside class="atlas-detail-drawer" id="atlas-detail-panel" aria-label="Detalhes da estrutura anatômica">
+      <div class="drawer-header">
+        <div class="drawer-system-tag">
+          <span class="sys-dot" id="detail-system-dot"></span>
+          <span id="detail-system-name">SISTEMA</span>
+        </div>
+        <h2 class="drawer-title" id="detail-title">Nome da Estrutura</h2>
+        <div class="drawer-orig-name" id="detail-orig-name">Original English Name</div>
+        <button class="drawer-close-btn" id="close-details" aria-label="Fechar painel de detalhes">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="drawer-meta-pills">
+          <span class="meta-pill">Ontologia: <strong id="detail-fma">FMA0000</strong></span>
+          <span class="meta-pill">Malhas: <strong id="detail-count">1 peça</strong></span>
+        </div>
+
+        <div class="drawer-description" id="detail-description">
+          Descrição detalhada da estrutura selecionada.
+        </div>
+
+        <div class="drawer-extra-card" id="detail-extra-info" style="display: none;">
+          <!-- Fisiologia e curiosidades biomédicas preenchidas dinamicamente -->
+        </div>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="btn-isolate-action" id="btn-isolate">
+          <span class="icon">🎯</span> Isolar Estrutura
+        </button>
+        <button class="btn-isolate-action" id="btn-hide-part" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #ffffff;" title="Ocultar esta estrutura para dissecar camadas internas [Tecla H]">
+          <span class="icon">👁️</span> Ocultar
+        </button>
+      </div>
+    </aside>
+
+    <!-- Tela de Carregamento Progressivo -->
+    <div class="atlas-loading-overlay" id="atlas-loading-screen" role="status">
+      <div class="loading-spinner-ring"></div>
+      <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--teal-glow);">Carregando Atlas Anatômico 3D</h3>
+      <p style="margin: 6px 0 0; font-size: 0.85rem; color: var(--muted-light);">
+        Descompactando geometria anatômica otimizada na GPU...
+      </p>
+      <div class="loading-track">
+        <div class="loading-bar-fill" id="loading-progress-bar"></div>
+      </div>
+      <span id="loading-percent-text" style="font-size: 0.8rem; margin-top: 6px; font-weight: 600; color: #ffffff;">0%</span>
+    </div>
+
+    <!-- Alerta de Erro -->
+    <div class="atlas-loading-overlay" id="atlas-error-screen" style="display: none; background: rgba(8, 27, 41, 0.95);" role="alert">
+      <h3 style="color: var(--red); margin: 0 0 10px;">Falha ao Carregar o Visualizador</h3>
+      <p id="atlas-error-msg" style="max-width: 400px; text-align: center; font-size: 0.9rem; color: #cbd5e1;"></p>
+      <button class="preset-btn" style="margin-top: 14px;" onclick="location.reload()">Recarregar Página</button>
+    </div>
+
+  </main>
+
+  <!-- Modal de Sobre, Dados e Atribuição Legal -->
+  <div class="atlas-modal" id="modal-about" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+      <button class="modal-close" id="close-about" aria-label="Fechar janela de informações">&times;</button>
+      <h2 id="modal-title">Sobre o Atlas Anatômico 3D do LabSim</h2>
+      <p>
+        O <strong>LabSim Atlas 3D</strong> é uma plataforma dedicada e imersiva de exploração anatômica humana, construída com arquitetura Three.js de alta performance e processamento de malhas otimizado diretamente na GPU.
+      </p>
+      <p>
+        <strong>Modelos Anatômicos Integrados:</strong><br>
+        • <strong>Anatomia Masculina:</strong> Adaptada do projeto <em>BodyParts3D 4.0</em>, © The Database Center for Life Science (DBCLS), Japão. Licença <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--teal-glow);">CC BY 4.0</a>. 2.234 malhas anatômicas e 3.432 conceitos FMA.<br>
+        • <strong>Anatomia Feminina:</strong> Adaptada do <em>Human Reference Atlas / HuBMAP v1.5</em> (Kristen Browne & Heidi Schlehlein, 2023). Licença <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--teal-glow);">CC BY 4.0</a>. 888 malhas anatômicas, órgãos internos e sistema reprodutor feminino.
+      </p>
+      <p>
+        <strong>Recursos Interativos:</strong><br>
+        • Alternância instantânea entre modelo Masculino e Feminino.<br>
+        • Visão Explodida espacial calculada em tempo real sem sobreposição.<br>
+        • Cortes Tomográficos clínicos (Axial, Coronal, Sagital).<br>
+        • Modo Raio-X holográfico e Dissecação virtual (ocultação de peças).<br>
+        • Busca instantânea em Português com atalho <code>/</code>.<br>
+        • Captura de imagem fotográfica médica em PNG em alta resolução.
+      </p>
+      <p style="font-size: 0.76rem; color: var(--muted-light); margin-bottom: 0;">
+        Aviso Didático: Ambiente simulado exclusivamente para finalidades acadêmicas e de educação biomédica. Não se destina a planejamentos cirúrgicos ou laudos diagnósticos clínicos.
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="js/atlas/atlas-app.js"></script>
+</body>
+</html>

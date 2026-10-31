@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Laboratório educacional de Microscopia Virtual do LabSim. Explore células, lâminas e estruturas em alta resolução.">
+  <title>Microscopia Virtual | LabSim</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="lab-subpage">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="LabSim, página inicial"><span class="brand-mark" aria-hidden="true">⌬</span>Lab<span>Sim</span></a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="anatomia.html">Explorar corpo 3D</a>
+      <a class="active" href="laboratorios.html">Laboratórios</a>
+      <a href="index.html#como-funciona">Como funciona</a>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <!-- Hero da Microscopia -->
+    <section class="lab-hero section-wrap">
+      <a class="back-link" href="laboratorios.html">← Todos os laboratórios</a>
+      <div class="lab-hero-badge"><span class="badge-dot"></span> LABORATÓRIO VIRTUAL DE ÓPTICA</div>
+      <h1>Microscopia Científica</h1>
+      <p class="lead">Mergulhe na dimensão celular. Selecione lâminas histológicas preparadas, regule a magnificação da lente objetiva e descubra as nanoestruturas fundamentais dos tecidos biológicos.</p>
+    </section>
+
+    <!-- Simulador de Microscópio -->
+    <section class="section-wrap scope-section">
+      <div class="scope-layout">
+        <!-- Ocular / Campo de Visão -->
+        <div class="scope-viewport-wrap">
+          <div class="scope-lens-frame">
+            <div class="scope-reticle" aria-hidden="true">
+              <span class="reticle-h"></span>
+              <span class="reticle-v"></span>
+              <span class="reticle-circle-1"></span>
+              <span class="reticle-circle-2"></span>
+            </div>
+            <div class="scope-stage" id="scope-stage" data-zoom="100">
+              <svg id="scope-svg" viewBox="0 0 600 600" class="scope-svg" role="img" aria-label="Visualização microscópica da lâmina">
+                <!-- Conteúdo gerado dinamicamente via JS -->
+              </svg>
+            </div>
+            <div class="lens-glare" aria-hidden="true"></div>
+            <div class="scope-scale-marker" id="scope-scale-marker">Barra de escala: ~50 µm</div>
+          </div>
+          <div class="scope-controls-bar">
+            <div class="scope-zoom-buttons" role="group" aria-label="Objetivas do microscópio">
+              <span class="ctrl-label">OBJETIVA:</span>
+              <button class="zoom-btn active" data-power="40" type="button">40x <small>(Varredura)</small></button>
+              <button class="zoom-btn" data-power="100" type="button">100x <small>(Baixo aumento)</small></button>
+              <button class="zoom-btn" data-power="400" type="button">400x <small>(Alto aumento)</small></button>
+              <button class="zoom-btn" data-power="1000" type="button">1000x <small>(Imersão)</small></button>
+            </div>
+            <div class="scope-focus-dial">
+              <label for="focus-slider">Foco Fino (Micrométrico):</label>
+              <input type="range" id="focus-slider" min="0" max="100" value="100" aria-label="Ajuste micrométrico de foco">
+              <span id="focus-val" class="focus-readout">100% Nítido</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seletor de Lâminas e Detalhes da Amostra -->
+        <div class="scope-sidebar">
+          <h2 class="sidebar-title">Caixa de Lâminas Histológicas</h2>
+          <div class="slides-rack" role="tablist" aria-label="Lâminas disponíveis">
+            <button class="slide-card active" data-slide="blood" role="tab" aria-selected="true">
+              <div class="slide-indicator slide-blood-thumb"></div>
+              <div class="slide-info">
+                <strong>Esfregaço Sanguíneo Humano</strong>
+                <span>Coloração Leishman / Wright</span>
+              </div>
+            </button>
+            <button class="slide-card" data-slide="neuron" role="tab" aria-selected="false">
+              <div class="slide-indicator slide-neuron-thumb"></div>
+              <div class="slide-info">
+                <strong>Tecido Nervoso (Córtex Cerebral)</strong>
+                <span>Coloração por Impregnação de Prata</span>
+              </div>
+            </button>
+            <button class="slide-card" data-slide="muscle" role="tab" aria-selected="false">
+              <div class="slide-indicator slide-muscle-thumb"></div>
+              <div class="slide-info">
+                <strong>Músculo Estriado Esquelético</strong>
+                <span>Coloração Hematoxilina-Eosina (HE)</span>
+              </div>
+            </button>
+            <button class="slide-card" data-slide="alveoli" role="tab" aria-selected="false">
+              <div class="slide-indicator slide-alveoli-thumb"></div>
+              <div class="slide-info">
+                <strong>Parênquima Pulmonar (Alvéolos)</strong>
+                <span>Corte histológico fino 4µm</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Informações histológicas da lâmina ativa -->
+          <article class="slide-details-card" id="slide-details-card">
+            <p class="eyebrow" id="slide-prep">COLORAÇÃO LEISHMAN · 100x</p>
+            <h3 id="slide-name">Esfregaço Sanguíneo Humano</h3>
+            <p id="slide-desc" class="slide-desc">Amostra demonstrando hemácias abundantes em formato bicôncavo e leucócitos corados com núcleos polimorfonucleares e citoplasma granulado.</p>
+            <div class="slide-meta-grid">
+              <div>
+                <span class="meta-label">Estrutura Primária</span>
+                <strong id="slide-primary">Eritrócitos & Neutrófilos</strong>
+              </div>
+              <div>
+                <span class="meta-label">Diâmetro Celular</span>
+                <strong id="slide-size">~7,5 µm (hemácia)</strong>
+              </div>
+            </div>
+            <div class="curiosity scope-curiosity">
+              <b>Destaque Microscópico</b>
+              <p id="slide-highlight">Na coloração de rotina, as hemácias perdem seu núcleo durante o amadurecimento eritroblástico para abrigar a maior quantidade possível de hemoglobina.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conexão com os outros laboratórios -->
+    <section class="section-wrap cross-lab-section">
+      <div class="cross-lab-box">
+        <div>
+          <p class="eyebrow">INTEGRAÇÃO ENTRE LABORATÓRIOS</p>
+          <h3>Gostou de ver as células do sangue em detalhe microscópico?</h3>
+          <p>Visite o laboratório de Hematologia para interagir com o modelo celular 3D e resolver o desafio investigativo.</p>
+        </div>
+        <a class="button primary" href="hematologia.html">Explorar Hematologia <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-col brand-col">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">⌬</span>Lab<span>Sim</span></a>
+      <p>Plataforma científica aberta de educação e aprendizagem interativa.</p>
+    </div>
+    <div class="footer-col links-col">
+      <strong>Exploração</strong>
+      <a href="anatomia.html">Atlas 3D do Corpo</a>
+      <a href="hematologia.html">Lab Hematologia</a>
+      <a href="microscopia.html">Lab Microscopia</a>
+    </div>
+    <div class="footer-col notice-col">
+      <p class="footer-note">Aviso Científico: Ambiente simulado exclusivamente para fins didáticos e educacionais. Não fornece parâmetros de apoio a diagnósticos clínicos reais.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/microscopia.js"></script>
+</body>
+</html>

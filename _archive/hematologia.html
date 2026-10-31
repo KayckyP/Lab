@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Laboratório educacional de Hematologia do LabSim. Investigue as propriedades de eritrócitos, leucócitos e plaquetas.">
+  <title>Hematologia Prática | LabSim</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="lab-subpage">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="LabSim, página inicial">
+      <span class="brand-mark" aria-hidden="true">⌬</span>
+      Lab<span>Sim</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="anatomia.html">Explorar Corpo 3D</a>
+      <a class="active" href="laboratorios.html">Laboratórios</a>
+      <a href="index.html#como-funciona">Como Funciona</a>
+      <a class="nav-cta" href="anatomia.html">Iniciar Exploração →</a>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <!-- HERO HEMATOLOGIA -->
+    <section class="section-wrap" style="padding: 40px 0 25px;">
+      <a class="back-link" href="laboratorios.html">← Todos os laboratórios</a>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="badge-dot" style="background-color: var(--red); box-shadow: 0 0 8px var(--red);"></span>
+        <span class="eyebrow" style="margin: 0; color: var(--red);">LABORATÓRIO DE FISIOLOGIA SANGUÍNEA</span>
+      </div>
+      <h1 style="font-size: clamp(2.4rem, 4vw, 3.5rem); letter-spacing: -1.5px; margin: 0 0 14px;">Hematologia Prática</h1>
+      <p class="lead" style="font-size: 1.1rem; color: var(--muted); max-width: 720px; margin: 0;">O sangue é um tecido conjuntivo líquido fundamental que irriga todo o organismo. Selecione cada um dos três elementos figurados abaixo para investigar sua estrutura bioquímica, função fisiológica e relevância clínica.</p>
+    </section>
+
+    <!-- ÁREA DE COMPONENTES DO SANGUE -->
+    <section class="section-wrap component-area" aria-labelledby="componentes-title">
+      <h2 id="componentes-title" style="font-size: 1.8rem; margin: 0 0 24px;">Elementos Figurados do Sangue</h2>
+      <div class="component-layout">
+        <!-- Abas de Seleção -->
+        <div class="component-tabs" role="tablist" aria-label="Componentes do sangue">
+          <button class="component-tab active" role="tab" aria-selected="true" aria-controls="detail-panel" data-component="hemacias">
+            <span class="dot red"></span>
+            <b>Hemácias (Eritrócitos)</b>
+            <small>Transporte de Oxigênio (Hemoglobina)</small>
+          </button>
+          
+          <button class="component-tab" role="tab" aria-selected="false" aria-controls="detail-panel" data-component="leucocitos">
+            <span class="dot violet"></span>
+            <b>Leucócitos (Glóbulos Brancos)</b>
+            <small>Imunidade Celular e Defesa</small>
+          </button>
+          
+          <button class="component-tab" role="tab" aria-selected="false" aria-controls="detail-panel" data-component="plaquetas">
+            <span class="dot teal"></span>
+            <b>Plaquetas (Trombócitos)</b>
+            <small>Coagulação e Hemostasia Primária</small>
+          </button>
+        </div>
+
+        <!-- Cartão de Detalhes Científicos -->
+        <article id="detail-panel" class="detail-card" role="tabpanel" tabindex="0">
+          <div class="detail-illustration red" id="detail-illustration" aria-hidden="true">
+            <span class="large-cell"></span>
+          </div>
+          <div>
+            <span class="panel-header-badge" id="detail-label">TRANSPORTE DE OXIGÊNIO</span>
+            <h3 id="detail-title" style="font-size: 1.7rem; margin: 0 0 10px; color: var(--navy);">Hemácias (Eritrócitos)</h3>
+            <p id="detail-text" style="color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 16px;">As hemácias, ou glóbulos vermelhos, são células anucleadas ricas em hemoglobina, uma proteína complexa que se liga avidamente ao oxigênio nos pulmões e o libera nos tecidos celulares pelo organismo.</p>
+            <p id="detail-extra" style="color: var(--ink); font-size: 0.88rem; font-weight: 500; margin: 0 0 18px;">Sua forma bicôncava maximiza a superfície de contato para troca gasosa e permite grande flexibilidade para percorrer capilares diminutos.</p>
+            
+            <div class="curiosity-card" id="detail-fact">
+              <b>Destaque Biomédico</b>
+              <span>Cada hemácia vive em média 120 dias e transporta cerca de 1 bilhão de moléculas de oxigênio!</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- AMOSTRA DIDÁTICA FICTÍCIA -->
+    <section class="sample-section">
+      <div class="section-wrap">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+          <div>
+            <p class="eyebrow"><span class="badge-dot"></span> ATIVIDADE EXPERIMENTAL PRÁTICA</p>
+            <h2 style="font-size: 1.8rem; margin: 0 0 8px;">Análise da Amostra Sanguínea Fictícia (A-17)</h2>
+            <p style="color: var(--muted); font-size: 0.92rem; margin: 0; max-width: 680px;">Observe as proporções celulares de uma lâmina simulada padrão de sangue periférico humano saudável para consolidar seus conhecimentos antes do desafio.</p>
+          </div>
+          <div style="font-size: 0.78rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid #bae6fd;">
+            ◌ Dados Fictícios para Fins de Aprendizagem
+          </div>
+        </div>
+
+        <div class="sample-table-wrap">
+          <table>
+            <caption>Amostra Didática de Sangue Periférico A-17</caption>
+            <thead>
+              <tr>
+                <th>Componente Celular</th>
+                <th>Morfologia e Frequência Relativa</th>
+                <th>Papel Fisiológico Central</th>
+                <th>Tempo de Sobrevida</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="dot red"></span> <strong>Hemácias (Eritrócitos)</strong></td>
+                <td>Discos bicôncavos anucleados (~4,5 a 5,5 milhões/mm³)</td>
+                <td>Transporte de O₂ (oxi-hemoglobina) e CO₂</td>
+                <td>~120 dias</td>
+              </tr>
+              <tr>
+                <td><span class="dot violet"></span> <strong>Leucócitos (Glóbulos Brancos)</strong></td>
+                <td>Células nucleadas diversas (~4.000 a 11.000/mm³)</td>
+                <td>Defesa imune celular e produção de anticorpos</td>
+                <td>Horas a anos (memória)</td>
+              </tr>
+              <tr>
+                <td><span class="dot teal"></span> <strong>Plaquetas (Trombócitos)</strong></td>
+                <td>Fragmentos celulares diminutos (~150.000 a 450.000/mm³)</td>
+                <td>Adesão e agregação na hemostasia primária</td>
+                <td>~7 a 10 dias</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="text-align: right;">
+          <a class="button primary" href="#desafio">Iniciar Desafio Investigativo →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESAFIO INVESTIGATIVO INTERATIVO (QUIZ) -->
+    <section class="quiz-section section-wrap" id="desafio" aria-labelledby="quiz-title">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto 36px;">
+        <p class="eyebrow"><span class="badge-dot"></span> AVALIAÇÃO DE CONHECIMENTO</p>
+        <h2 id="quiz-title" style="font-size: 2.1rem; margin: 0 0 10px;">Desafio de Hematologia</h2>
+        <p style="color: var(--muted); font-size: 0.95rem; margin: 0;">Responda às 5 perguntas científicas fundamentadas no laboratório. Você receberá a explicação de cada alternativa logo após a seleção.</p>
+      </div>
+
+      <div id="quiz-app" class="quiz-app" aria-live="polite">
+        <!-- Renderizado dinamicamente por js/hematologia.js -->
+      </div>
+    </section>
+
+    <!-- CONEXÃO COM O LABORATÓRIO DE MICROSCOPIA -->
+    <section class="section-wrap" style="padding-bottom: 70px;">
+      <div class="atlas-banner" style="background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);">
+        <div>
+          <p class="eyebrow" style="color: #a5b4fc;">CONTINUE SUA INVESTIGAÇÃO</p>
+          <h2>Quer ver essas células em um microscópio óptico real?</h2>
+          <p>Acesse o novo Laboratório de Microscopia Virtual do LabSim e examine o esfregaço sanguíneo com lentes de até 1000x de aumento.</p>
+        </div>
+        <a class="button primary" href="microscopia.html" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+          Abrir Microscópio Virtual <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-col brand-col">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">⌬</span>
+        Lab<span>Sim</span>
+      </a>
+      <p>Plataforma científica aberta de educação e aprendizagem interativa.</p>
+    </div>
+    <div class="footer-col links-col">
+      <strong>Exploração</strong>
+      <a href="anatomia.html">Atlas 3D do Corpo</a>
+      <a href="hematologia.html">Lab Hematologia</a>
+      <a href="microscopia.html">Lab Microscopia</a>
+    </div>
+    <div class="footer-col notice-col">
+      <p class="footer-note">Aviso Científico: Ambiente simulado exclusivamente para fins didáticos e educacionais. Não fornece parâmetros de apoio a diagnósticos clínicos reais.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/hematologia.js"></script>
+</body>
+</html>
